@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Connect GitHub Pages to MongoDB Atlas — Beginner Guide</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;color:#1a1a18;background:#fafaf7;line-height:1.7}
+  .page{max-width:780px;margin:0 auto;padding:2.5rem 1.5rem 5rem}
+  h1{font-size:28px;font-weight:700;letter-spacing:-.5px;margin-bottom:8px}
+  .subtitle{font-size:15px;color:#6b6b66;margin-bottom:2.5rem}
+  h2{font-size:18px;font-weight:600;margin:2.5rem 0 10px;display:flex;align-items:center;gap:10px}
+  h2 .step-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#D4500A;color:#fff;border-radius:50%;font-size:13px;font-weight:700;flex-shrink:0}
+  h3{font-size:14px;font-weight:600;margin:1.25rem 0 6px;color:#3d3b35}
+  p{margin-bottom:10px;color:#3d3b35}
+  ul,ol{padding-left:1.5rem;margin-bottom:12px;color:#3d3b35}
+  li{margin-bottom:5px}
+  code{font-family:'SFMono-Regular',Consolas,monospace;font-size:13px;background:#f0efe8;padding:2px 6px;border-radius:4px;color:#D4500A}
+  pre{background:#14130F;color:#e8e7e0;border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin:12px 0;font-size:13px;font-family:monospace;line-height:1.6}
+  pre .cmt{color:#6b6b66}
+  pre .kw{color:#FF9B6A}
+  pre .str{color:#6FD49A}
+  pre .fn{color:#89BFFF}
+  .card{background:#fff;border:.5px solid rgba(0,0,0,.1);border-radius:12px;padding:1.25rem 1.5rem;margin:12px 0}
+  .card-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#6b6b66;margin-bottom:8px}
+  .analogy{background:#fff3dc;border:.5px solid rgba(160,90,0,.2);border-radius:10px;padding:1rem 1.25rem;margin:12px 0}
+  .analogy-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#a05a00;margin-bottom:5px}
+  .tip{background:#e6f5ed;border:.5px solid rgba(42,122,75,.2);border-radius:10px;padding:1rem 1.25rem;margin:12px 0}
+  .tip-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#2a7a4b;margin-bottom:5px}
+  .warn{background:#fceaea;border:.5px solid rgba(176,32,32,.2);border-radius:10px;padding:1rem 1.25rem;margin:12px 0}
+  .warn-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#b02020;margin-bottom:5px}
+  .flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
+  .flow-box{background:#fff;border:.5px solid rgba(0,0,0,.12);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:500;text-align:center}
+  .flow-arrow{color:#D4500A;font-size:18px;font-weight:700}
+  .divider{height:.5px;background:rgba(0,0,0,.08);margin:2rem 0}
+  .toc{background:#fff;border:.5px solid rgba(0,0,0,.1);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:2rem}
+  .toc-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#6b6b66;margin-bottom:10px}
+  .toc ol{margin:0}
+  .toc li{margin-bottom:4px}
+  .toc a{color:#D4500A;text-decoration:none;font-size:14px}
+  .toc a:hover{text-decoration:underline}
+  .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;background:#faeeda;color:#633806}
+  header{background:#14130F;color:#fff;padding:2rem 0;margin-bottom:0}
+  header .inner{max-width:780px;margin:0 auto;padding:0 1.5rem}
+  header h1{color:#fff;font-size:30px}
+  header .subtitle{color:rgba(255,255,255,.5);margin-bottom:0}
+  .logo{font-family:monospace;font-size:14px;color:rgba(255,255,255,.4);margin-bottom:.75rem}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <div class="logo">▶ VCS — Video Collection System</div>
+    <h1>How to Connect Your GitHub Site to MongoDB</h1>
+    <p class="subtitle">A beginner guide — explained like you're in high school 🎓</p>
+  </div>
+</header>
+
+<div class="page">
+
+<div class="toc">
+  <div class="toc-title">📋 What you'll learn</div>
+  <ol>
+    <li><a href="#big-picture">The Big Picture — what is MongoDB Atlas?</a></li>
+    <li><a href="#problem">Why GitHub Pages alone can't use a database</a></li>
+    <li><a href="#solution">The Solution — you need a "middleman" server</a></li>
+    <li><a href="#step1">Step 1 — Set up MongoDB Atlas (free)</a></li>
+    <li><a href="#step2">Step 2 — Create a free backend on Render.com</a></li>
+    <li><a href="#step3">Step 3 — Write the backend code (Node.js)</a></li>
+    <li><a href="#step4">Step 4 — Connect your GitHub site to the backend</a></li>
+    <li><a href="#step5">Step 5 — Deploy and test</a></li>
+  </ol>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<h2 id="big-picture"><span class="step-num">💡</span> The Big Picture</h2>
+
+<div class="analogy">
+  <div class="analogy-title">🍔 Real-life analogy</div>
+  Imagine a fast food restaurant:
+  <ul style="margin-top:8px">
+    <li><strong>Your GitHub website</strong> = the menu board (just shows info, takes your order)</li>
+    <li><strong>MongoDB Atlas</strong> = the storage room in the back (where all the food/data lives)</li>
+    <li><strong>The backend server</strong> = the kitchen staff (they take orders from the menu and go get stuff from the storage room)</li>
+  </ul>
+  <br>The menu board <strong>cannot</strong> directly open the storage room. It needs the kitchen staff in the middle.
+</div>
+
+<div class="flow">
+  <div class="flow-box">🌐 Your GitHub Site<br><small>(the menu board)</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">⚙️ Backend Server<br><small>(the kitchen — on Render.com)</small></div>
+  <div class="flow-arrow">→</div>
+  <div class="flow-box">🗄️ MongoDB Atlas<br><small>(the storage room)</small></div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<h2 id="problem"><span class="step-num">❓</span> Why can't GitHub Pages talk to MongoDB directly?</h2>
+
+<p>GitHub Pages only hosts <strong>static files</strong> — HTML, CSS, and JavaScript. Think of it like a poster on a wall. It can only show what's already printed on it.</p>
+
+<p>MongoDB needs a <strong>secret password</strong> (your connection string) to connect. If you put that password in your JavaScript file on GitHub, <em>anyone on the internet can read it and steal your database</em>. 🚨</p>
+
+<div class="warn">
+  <div class="warn-title">⚠️ Never do this</div>
+  <code>const uri = "mongodb+srv://admin:mypassword123@cluster0.mongodb.net"</code><br><br>
+  Never put your MongoDB password directly in JavaScript files that go on GitHub. It's like leaving your house key under the doormat.
+</div>
+
+<div class="tip">
+  <div class="tip-title">✅ The safe way</div>
+  You need a backend server that keeps the password hidden. Your website talks to the backend, and the backend talks to MongoDB. The password never leaves the server.
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<h2 id="solution"><span class="step-num">🔧</span> The Solution — Render.com (free backend hosting)</h2>
+
+<p>Since you're using the free version of GitHub Pages, here's the <strong>completely free stack</strong> you'll use:</p>
+
+<div class="card">
+  <div class="card-title">Your Free Tech Stack</div>
+  <ul>
+    <li>🌐 <strong>GitHub Pages</strong> — hosts your HTML/CSS/JS website (you already have this)</li>
+    <li>⚙️ <strong>Render.com</strong> — FREE backend server hosting (Node.js) — this is your "kitchen"</li>
+    <li>🗄️ <strong>MongoDB Atlas</strong> — FREE cloud database — you already made an account!</li>
+  </ul>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<h2 id="step1"><span class="step-num">1</span> Set Up MongoDB Atlas</h2>
+
+<p>You already made an account at <code>cloud.mongodb.com</code>. Now let's set it up properly.</p>
+
+<h3>1a. Create a free cluster</h3>
+<ol>
+  <li>Log in to <strong>cloud.mongodb.com</strong></li>
+  <li>Click <strong>"Build a Database"</strong></li>
+  <li>Choose <strong>FREE / M0 Shared</strong> (it's free forever)</li>
+  <li>Pick any cloud provider (AWS is fine) and a region close to you</li>
+  <li>Click <strong>"Create"</strong></li>
+</ol>
+
+<h3>1b. Create a database user</h3>
+<ol>
+  <li>On the left sidebar, click <strong>Database Access</strong></li>
+  <li>Click <strong>"Add New Database User"</strong></li>
+  <li>Choose <strong>Password</strong> authentication</li>
+  <li>Username: <code>vcs_admin</code></li>
+  <li>Password: click <strong>"Autogenerate"</strong> and <strong>copy it somewhere safe</strong></li>
+  <li>Under "Database User Privileges" → choose <strong>Read and write to any database</strong></li>
+  <li>Click <strong>"Add User"</strong></li>
+</ol>
+
+<h3>1c. Allow connections from anywhere</h3>
+<ol>
+  <li>On the left sidebar, click <strong>Network Access</strong></li>
+  <li>Click <strong>"Add IP Address"</strong></li>
+  <li>Click <strong>"Allow Access from Anywhere"</strong> — this adds <code>0.0.0.0/0</code></li>
+  <li>Click <strong>"Confirm"</strong></li>
+</ol>
+
+<div class="tip">
+  <div class="tip-title">💡 Why "anywhere"?</div>
+  Your backend server on Render.com has a changing IP address, so you need to allow all IPs. This is fine because your database still requires a username and password to connect.
+</div>
+
+<h3>1d. Get your connection string</h3>
+<ol>
+  <li>Go to <strong>Database</strong> (left sidebar) → click <strong>"Connect"</strong> on your cluster</li>
+  <li>Choose <strong>"Connect your application"</strong></li>
+  <li>Select <strong>Node.js</strong>, version <strong>4.1 or later</strong></li>
+  <li>Copy the connection string — it looks like this:</li>
+</ol>
+<pre>mongodb+srv://vcs_admin:&lt;password&gt;@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority</pre>
+<p>Replace <code>&lt;password&gt;</code> with the password you saved earlier. <strong>Save this whole string</strong> — you'll need it in Step 3.</p>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<h2 id="step2"><span class="step-num">2</span> Set Up Render.com (Free Backend Host)</h2>
+
+<ol>
+  <li>Go to <strong>render.com</strong> and sign up for free (use your GitHub account to log in — easiest)</li>
+  <li>After signing in, click <strong>"New +"</strong> → choose <strong>"Web Service"</strong></li>
+  <li>Connect your GitHub account and select your VCS repository</li>
+  <li>Fill in the settings:
+    <ul>
+      <li><strong>Name:</strong> vcs-backend</li>
+      <li><strong>Runtime:</strong> Node</li>
+      <li><strong>Build Command:</strong> <code>npm install</code></li>
+      <li><strong>Start Command:</strong> <code>node server.js</code></li>
+      <li><strong>Instance Type:</strong> Free</li>
+    </ul>
+  </li>
+  <li>Scroll down to <strong>"Environment Variables"</strong> and add:
+    <ul>
+      <li>Key: <code>MONGODB_URI</code> → Value: your connection string from Step 1d</li>
+      <li>Key: <code>ALLOWED_ORIGIN</code> → Value: <code>https://your-username.github.io</code></li>
+    </ul>
+  </li>
+  <li>Click <strong>"Create Web Service"</strong> — Render will give you a URL like <code>https://vcs-backend.onrender.com</code></li>
+</ol>
+
+<div class="tip">
+  <div class="tip-title">💡 Why environment variables?</div>
+  Environment variables are like secret notes the server reads privately. Your GitHub code never sees them — they stay safely on Render's servers.
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<h2 id="step3"><span class="step-num">3</span> Write the Backend Code</h2>
+
+<p>Create these two files in a <strong>new folder called <code>backend/</code></strong> inside your GitHub repository.</p>
+
+<h3>backend/package.json</h3>
+<pre>{
+  <span class="str">"name"</span>: <span class="str">"vcs-backend"</span>,
+  <span class="str">"version"</span>: <span class="str">"1.0.0"</span>,
+  <span class="str">"main"</span>: <span class="str">"server.js"</span>,
+  <span class="str">"scripts"</span>: {
+    <span class="str">"start"</span>: <span class="str">"node server.js"</span>
+  },
+  <span class="str">"dependencies"</span>: {
+    <span class="str">"cors"</span>: <span class="str">"^2.8.5"</span>,
+    <span class="str">"express"</span>: <span class="str">"^4.18.2"</span>,
+    <span class="str">"mongoose"</span>: <span class="str">"^8.0.0"</span>
+  }
+}</pre>
+
+<h3>backend/server.js</h3>
+<pre><span class="cmt">// ── Imports ─────────────────────────────────────────────────</span>
+<span class="kw">const</span> express  = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> cors     = <span class="fn">require</span>(<span class="str">'cors'</span>);
+<span class="kw">const</span> mongoose = <span class="fn">require</span>(<span class="str">'mongoose'</span>);
+
+<span class="kw">const</span> app = <span class="fn">express</span>();
+app.<span class="fn">use</span>(express.<span class="fn">json</span>());
+
+<span class="cmt">// ── CORS — only allow your GitHub Pages site ─────────────────</span>
+app.<span class="fn">use</span>(<span class="fn">cors</span>({
+  origin: process.env.ALLOWED_ORIGIN  <span class="cmt">// set this in Render environment variables</span>
+}));
+
+<span class="cmt">// ── Connect to MongoDB Atlas ─────────────────────────────────</span>
+mongoose.<span class="fn">connect</span>(process.env.MONGODB_URI)
+  .<span class="fn">then</span>(() => console.<span class="fn">log</span>(<span class="str">'✅ Connected to MongoDB Atlas'</span>))
+  .<span class="fn">catch</span>(err => console.<span class="fn">error</span>(<span class="str">'❌ MongoDB error:'</span>, err));
+
+<span class="cmt">// ── Task Schema (like a table blueprint) ─────────────────────</span>
+<span class="kw">const</span> taskSchema = <span class="kw">new</span> mongoose.<span class="fn">Schema</span>({
+  title:         String,
+  billable:      Number,
+  peso_rate:     Number,
+  assignTo:      String,
+  assignedUsers: [String],
+  status:        { type: String, default: <span class="str">'pending'</span> },
+  tag:           { type: String, default: <span class="str">'coming-soon'</span> },
+  uploaded:      String,
+}, { timestamps: true });
+
+<span class="kw">const</span> Task = mongoose.<span class="fn">model</span>(<span class="str">'Task'</span>, taskSchema);
+
+<span class="cmt">// ── Routes ───────────────────────────────────────────────────</span>
+
+<span class="cmt">// GET all tasks</span>
+app.<span class="fn">get</span>(<span class="str">'/api/tasks'</span>, <span class="kw">async</span> (req, res) => {
+  <span class="kw">const</span> tasks = <span class="kw">await</span> Task.<span class="fn">find</span>().<span class="fn">sort</span>({ createdAt: -1 });
+  res.<span class="fn">json</span>(tasks);
+});
+
+<span class="cmt">// GET tasks for a specific user</span>
+app.<span class="fn">get</span>(<span class="str">'/api/tasks/mine/:uid'</span>, <span class="kw">async</span> (req, res) => {
+  <span class="kw">const</span> tasks = <span class="kw">await</span> Task.<span class="fn">find</span>({ assignedUsers: req.params.uid });
+  res.<span class="fn">json</span>(tasks);
+});
+
+<span class="cmt">// POST create task</span>
+app.<span class="fn">post</span>(<span class="str">'/api/tasks'</span>, <span class="kw">async</span> (req, res) => {
+  <span class="kw">const</span> task = <span class="kw">await</span> Task.<span class="fn">create</span>(req.body);
+  res.<span class="fn">json</span>(task);
+});
+
+<span class="cmt">// PATCH update task (tag, status, upload)</span>
+app.<span class="fn">patch</span>(<span class="str">'/api/tasks/:id'</span>, <span class="kw">async</span> (req, res) => {
+  <span class="kw">const</span> task = <span class="kw">await</span> Task.<span class="fn">findByIdAndUpdate</span>(req.params.id, req.body, { new: true });
+  res.<span class="fn">json</span>(task);
+});
+
+<span class="cmt">// DELETE task</span>
+app.<span class="fn">delete</span>(<span class="str">'/api/tasks/:id'</span>, <span class="kw">async</span> (req, res) => {
+  <span class="kw">await</span> Task.<span class="fn">findByIdAndDelete</span>(req.params.id);
+  res.<span class="fn">json</span>({ ok: true });
+});
+
+<span class="cmt">// ── Start server ─────────────────────────────────────────────</span>
+<span class="kw">const</span> PORT = process.env.PORT || 3000;
+app.<span class="fn">listen</span>(PORT, () => console.<span class="fn">log</span>(<span class="str">`🚀 Server running on port ${PORT}`</span>));</pre>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<h2 id="step4"><span class="step-num">4</span> Update Your Frontend (api-client.js)</h2>
+
+<p>In your existing <code>js/api-client.js</code> file, change the API base URL to point at your Render backend:</p>
+
+<pre><span class="cmt">// Change this one line in api-client.js</span>
+<span class="kw">const</span> API_BASE = <span class="str">'https://vcs-backend.onrender.com/api'</span>;
+<span class="cmt">//                ↑ replace with your actual Render URL</span>
+
+<span class="cmt">// Then fetch tasks like this from anywhere in your JS:</span>
+<span class="kw">const</span> tasks = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`${API_BASE}/tasks`</span>).<span class="fn">then</span>(r => r.<span class="fn">json</span>());
+
+<span class="cmt">// Create a task:</span>
+<span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">`${API_BASE}/tasks`</span>, {
+  method: <span class="str">'POST'</span>,
+  headers: { <span class="str">'Content-Type'</span>: <span class="str">'application/json'</span> },
+  body: <span class="fn">JSON.stringify</span>({ title: <span class="str">'New Task'</span>, billable: 60, peso_rate: 25 })
+});</pre>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════════════════════════ -->
+<h2 id="step5"><span class="step-num">5</span> Deploy and Test</h2>
+
+<ol>
+  <li>Push the <code>backend/</code> folder to your GitHub repo</li>
+  <li>Render will automatically detect the changes and redeploy</li>
+  <li>Visit your Render URL: <code>https://vcs-backend.onrender.com/api/tasks</code> — you should see <code>[]</code> (empty array)</li>
+  <li>Open your GitHub Pages site — it will now read/write from MongoDB!</li>
+</ol>
+
+<div class="tip">
+  <div class="tip-title">✅ How to check if it's working</div>
+  <ol>
+    <li>Open your website on GitHub Pages</li>
+    <li>Log in as admin and create a task</li>
+    <li>Go to <strong>cloud.mongodb.com</strong> → your cluster → <strong>Browse Collections</strong></li>
+    <li>You should see the task saved there! 🎉</li>
+  </ol>
+</div>
+
+<div class="warn">
+  <div class="warn-title">⚠️ Free tier note — Render "sleep"</div>
+  On Render's free plan, your backend goes to sleep after 15 minutes of no traffic. The first request after sleeping takes about 30–60 seconds. This is normal for free hosting. Upgrade to a paid plan ($7/month) to keep it always awake.
+</div>
+
+<div class="divider"></div>
+
+<div class="card">
+  <div class="card-title">📦 Summary — what you built</div>
+  <div class="flow" style="flex-direction:column;align-items:flex-start;gap:6px">
+    <div class="flow-box" style="background:#f0efe8;width:100%">🌐 <strong>GitHub Pages</strong> — your frontend website (free, static)</div>
+    <div style="padding-left:14px;color:#D4500A;font-size:20px">↕ fetch() API calls</div>
+    <div class="flow-box" style="background:#f0efe8;width:100%">⚙️ <strong>Render.com</strong> — your Node.js backend (free, handles logic &amp; security)</div>
+    <div style="padding-left:14px;color:#D4500A;font-size:20px">↕ Mongoose ODM</div>
+    <div class="flow-box" style="background:#f0efe8;width:100%">🗄️ <strong>MongoDB Atlas</strong> — your cloud database (free, stores all data permanently)</div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

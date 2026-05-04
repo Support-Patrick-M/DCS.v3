@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Collection System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     LOGIN
+══════════════════════════════════════════════════════════ -->
+<div id="s-login" class="screen active">
+  <div class="login-wrap">
+    <div class="login-box">
+      <div class="login-logo">
+        <div class="login-logo-icon">▶</div>
+        <div>
+          <div class="login-title">VCS</div>
+          <div class="login-sub">Video Collection System</div>
+        </div>
+      </div>
+      <div class="login-card">
+        <div class="field">
+          <label for="login-user">Username</label>
+          <input type="text" id="login-user" placeholder="Enter username" autocomplete="username">
+        </div>
+        <div class="field">
+          <label for="login-pass">Password</label>
+          <input type="password" id="login-pass" placeholder="Enter password" autocomplete="current-password">
+        </div>
+        <div id="login-err" class="msg-error" style="display:none"></div>
+        <button class="btn primary full-w mt-sm" onclick="doLogin()">Sign in</button>
+      </div>
+      <p class="login-hint">demo: <span>admin</span> / admin123 &nbsp;·&nbsp; <span>tasker1</span> / pass123</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TASKER
+══════════════════════════════════════════════════════════ -->
+<div id="s-tasker" class="screen">
+  <header class="app-header">
+    <div class="header-left">
+      <div class="header-logo">▶ VCS</div>
+      <span class="role-chip tasker">Tasker</span>
+    </div>
+    <div class="header-right">
+      <span id="tasker-name-badge" class="user-label"></span>
+      <button class="btn sm ghost" onclick="showSignoutModal()">Sign out</button>
+    </div>
+  </header>
+  <div class="app-body">
+    <nav class="sidebar" id="s-tasker-nav">
+      <div class="nav-item active" onclick="taskerNav('dashboard',this)">
+        <span class="nav-icon">◈</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="taskerNav('settings',this)">
+        <span class="nav-icon">◎</span> Settings
+      </div>
+      <div class="nav-item" onclick="showSignoutModal()">
+        <span class="nav-icon">→</span> Sign out
+      </div>
+    </nav>
+    <main class="content" id="tasker-content"></main>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     ADMIN
+══════════════════════════════════════════════════════════ -->
+<div id="s-admin" class="screen">
+  <header class="app-header">
+    <div class="header-left">
+      <div class="header-logo">▶ VCS</div>
+      <span class="role-chip admin">Admin</span>
+    </div>
+    <div class="header-right">
+      <span id="admin-name-badge" class="user-label"></span>
+      <button class="btn sm ghost" onclick="showSignoutModal()">Sign out</button>
+    </div>
+  </header>
+  <div class="app-body">
+    <nav class="sidebar" id="s-admin-nav">
+      <div class="nav-item active" onclick="adminNav('dashboard',this)">
+        <span class="nav-icon">◈</span> Dashboard
+      </div>
+      <div class="nav-item" onclick="adminNav('manage-task',this)">
+        <span class="nav-icon">⊞</span> Manage Tasks
+      </div>
+      <div class="nav-item" onclick="adminNav('users',this)">
+        <span class="nav-icon">◉</span> Manage Users
+      </div>
+      <div class="nav-item" onclick="adminNav('videos',this)">
+        <span class="nav-icon">▶</span> Uploaded Videos
+      </div>
+      <div class="nav-item" onclick="adminNav('settings',this)">
+        <span class="nav-icon">◎</span> Settings
+      </div>
+      <div class="nav-item" onclick="showSignoutModal()">
+        <span class="nav-icon">→</span> Sign out
+      </div>
+    </nav>
+    <main class="content" id="admin-content"></main>
+  </div>
+</div>
+
+<div id="modal-layer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/components.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/tasker.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
