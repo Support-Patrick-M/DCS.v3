@@ -18,7 +18,7 @@ const tasks = await fetch(`${API_BASE}/tasks`).then(r => r.json());
 
 // Set to true once your backend is live on Render.
 // While false, the app runs entirely on local in-memory data (no database).
-const API_ENABLED = false; // ← change to true when backend is ready
+const API_ENABLED = true; // ← change to true when backend is ready
 
 // =============================================================
 //  Core request helper
