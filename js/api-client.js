@@ -12,7 +12,9 @@
 // │  PASTE YOUR RENDER BACKEND URL HERE                     │
 // │  e.g. https://vcs-backend.onrender.com/api              │
 // └─────────────────────────────────────────────────────────┘
-const API_BASE = 'https://vcs-backend.onrender.com/api'; // ← replace this
+const API_BASE = 'https://vcs-backend-9dz5.onrender.com'; // ← replace this
+const tasks = await fetch(`${API_BASE}/tasks`).then(r => r.json());
+
 
 // Set to true once your backend is live on Render.
 // While false, the app runs entirely on local in-memory data (no database).
@@ -41,6 +43,13 @@ async function apiRequest(path, { method = 'GET', body = null } = {}) {
 // =============================================================
 //  Task API calls
 // =============================================================
+
+// Create a task:
+await fetch(`${API_BASE}/tasks`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ title: 'New Task', billable: 60, peso_rate: 25 })
+});
 
 /** Get ALL tasks (admin view) */
 async function apiGetAllTasks() {
