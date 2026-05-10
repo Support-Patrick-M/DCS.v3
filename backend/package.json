@@ -1,6 +1,7 @@
 {
   "name": "vcs-backend",
   "version": "1.0.0",
+  "description": "Video Collection System — Backend API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
